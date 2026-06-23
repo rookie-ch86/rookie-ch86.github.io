@@ -1,19 +1,17 @@
-from zipfile import ZipFile
-from pathlib import Path
-
-html = r'''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>专业版幸运转盘</title>
 <style>
-*{box-sizing:border-box}body{margin:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#6dd5fa,#fefcea,#fcb69f);font-family:-apple-system,"Microsoft YaHei",sans-serif}
+*{box-sizing:border-box}body{margin:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#6dd5fa,#fefcea,#fcb69f);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:#333}
 h2{margin:10px}
 .wrap{position:relative}
-#pointer{position:absolute;left:50%;top:-8px;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:40px solid #e53935;z-index:5;filter:drop-shadow(0 2px 3px rgba(0,0,0,.3))}
+#pointer{position:absolute;left:50%;top:-8px;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:40px solid #e53935;z-index:10}
 canvas{width:min(90vw,430px);height:min(90vw,430px);border-radius:50%;border:8px solid #333;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-#center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:90px;height:90px;border-radius:50%;border:none;background:#ff5722;color:#fff;font-size:22px;font-weight:bold;cursor:pointer;z-index:4}
+#center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:90px;height:90px;border-radius:50%;border:none;background:#ff5722;color:#fff;font-size:22px;font-weight:bold;cursor:pointer;z-index:11;transition:.2s}
+#center:hover:not(:disabled){background:#e64a19;transform:translate(-50%,-50%) scale(1.05)}
 #center:disabled{opacity:.7}
 #result{margin-top:20px;font-size:1.5rem;font-weight:bold;text-align:center;min-height:60px}
 </style>
@@ -34,30 +32,29 @@ const btn=document.getElementById("center"),res=document.getElementById("result"
 const R=250,step=360/opts.length;
 let angle=0,spinning=false;
 function draw(){
- const rad=2*Math.PI/opts.length;
- for(let i=0;i<opts.length;i++){
-   ctx.beginPath();ctx.moveTo(R,R);ctx.arc(R,R,R,i*rad,(i+1)*rad);ctx.fillStyle=colors[i];ctx.fill();
-   ctx.save();ctx.translate(R,R);ctx.rotate(i*rad+rad/2);
-   ctx.font="bold 24px sans-serif";ctx.textAlign="right";ctx.fillStyle="#222";
-   ctx.fillText(opts[i],200,8);ctx.restore();
- }
+  const rad=2*Math.PI/opts.length;
+  for(let i=0;i<opts.length;i++){
+    ctx.beginPath();ctx.moveTo(R,R);ctx.arc(R,R,R,i*rad,(i+1)*rad);ctx.fillStyle=colors[i];ctx.fill();
+    ctx.save();ctx.translate(R,R);ctx.rotate(i*rad+rad/2);
+    ctx.font="bold 24px sans-serif";ctx.textAlign="right";ctx.fillStyle="#222";
+    ctx.fillText(opts[i],200,8);ctx.restore();
+  }
 }
 draw();
 btn.onclick=()=>{
- if(spinning)return;
- spinning=true;btn.disabled=true;res.textContent="";
- const idx=Math.floor(Math.random()*opts.length);
- const target=270-(idx*step+step/2);
- angle+=2160+((target-angle)%360+360)%360;
- cvs.style.transition="transform 5.5s cubic-bezier(.12,.9,.18,1)";
- cvs.style.transform=`rotate(${angle}deg)`;
- if(navigator.vibrate) navigator.vibrate([80,50,80]);
- setTimeout(()=>{
-   res.innerHTML="🎉 明天安排：<br><span style='font-size:2rem'>"+opts[idx]+"</span>";
-   spinning=false;btn.disabled=false;
- },5600);
+  if(spinning)return;
+  spinning=true;btn.disabled=true;res.textContent="";
+  const idx=Math.floor(Math.random()*opts.length);
+  const target=90+(idx*step+step/2);
+  angle+=2160+((target-angle)%360+360)%360;
+  cvs.style.transition="transform 5.5s cubic-bezier(.12,.9,.18,1)";
+  cvs.style.transform=`rotate(${angle}deg)`;
+  if(navigator.vibrate) navigator.vibrate([80,50,80]);
+  setTimeout(()=>{
+    res.innerHTML="🎉 明天安排：<br><span style='font-size:2rem'>"+opts[idx]+"</span>";
+    spinning=false;btn.disabled=false;
+  },5600);
 };
 </script>
 </body>
-</html>'''
-
+</html>
