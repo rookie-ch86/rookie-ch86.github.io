@@ -7,7 +7,7 @@
 
 点击下方链接直接使用：
 
-**[📱 打开转盘程序](https://rookie-ch86.github.io/-/)**
+**[📱 打开转盘程序](https://rookie-ch86.github.io/)**
 
 ## 🎮 功能说明
 
