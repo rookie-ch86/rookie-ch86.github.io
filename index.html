@@ -78,6 +78,7 @@ body{
     box-shadow:
     0 10px 30px rgba(0,0,0,.25);
 
+    transform-origin: center;
 }
 
 #spinBtn{
@@ -265,6 +266,25 @@ document.getElementById("result");
 const btn =
 document.getElementById("spinBtn");
 
+/* 计算指针指向的选项索引 */
+
+function getPointerIndex(rotation) {
+    // 标准化旋转角度到 0-360
+    const normalizedRotation = 
+        ((rotation % 360) + 360) % 360;
+    
+    // 指针在顶部（-90° 或 270°）
+    // 计算指针指向的角度
+    const pointerAngle = (270 - normalizedRotation + 360) % 360;
+    
+    // 计算对应的选项索引
+    const index = 
+        Math.floor(pointerAngle / sectorAngle) % 
+        options.length;
+    
+    return index;
+}
+
 /* 抽奖 */
 
 btn.onclick = () => {
@@ -283,23 +303,21 @@ btn.onclick = () => {
         options.length
     );
 
-    /*
-    顶部指针=270°
-    */
+    // 计算转盘需要转到的角度
+    // 让第 index 项的中心指向指针(270°)
+    const targetAngle = 
+        270 - 
+        (
+            index * sectorAngle + 
+            sectorAngle / 2
+        );
 
-    const stopAngle =
-    270 -
-    (
-        index *
-        sectorAngle +
-        sectorAngle / 2
-    );
-
+    // 累计旋转角度：转过多圈后停在目标位置
     currentRotation +=
         360 * 6 +
         (
             (
-                stopAngle -
+                targetAngle -
                 (currentRotation % 360)
             ) + 360
         ) % 360;
@@ -318,10 +336,14 @@ btn.onclick = () => {
 
     setTimeout(()=>{
 
+        // 验证最终指向的选项
+        const finalIndex = 
+            getPointerIndex(currentRotation);
+
         result.innerHTML =
         `
         🎉 明天安排<br>
-        <span>${options[index]}</span>
+        <span>${options[finalIndex]}</span>
         `;
 
         spinning = false;
