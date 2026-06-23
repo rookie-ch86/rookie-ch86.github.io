@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>明天去哪里学习</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#6dd5fa,#ffffff,#fcb69f);
+font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei",sans-serif;
+overflow:hidden;
+}
+h1{margin-bottom:20px;font-size:2rem;text-align:center}
+.pointer{
+width:0;height:0;
+border-left:18px solid transparent;
+border-right:18px solid transparent;
+border-top:36px solid #ff3b30;
+margin-bottom:-10px;
+z-index:10;
+}
+canvas{
+width:90vw;
+max-width:420px;
+aspect-ratio:1/1;
+border-radius:50%;
+border:6px solid #333;
+background:#fff;
+transition:transform 5s cubic-bezier(.2,.9,.2,1);
+box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+button{
+margin-top:28px;
+width:80vw;
+max-width:320px;
+padding:16px;
+font-size:1.2rem;
+border:none;
+border-radius:30px;
+background:#007aff;
+color:#fff;
+}
+button:active{transform:scale(.98)}
+#result{
+margin-top:20px;
+font-size:1.5rem;
+font-weight:bold;
+text-align:center;
+padding:0 20px;
+}
+</style>
+</head>
+<body>
+<h1>🎯 明天去哪里学习？</h1>
+<div class="pointer"></div>
+<canvas id="wheel" width="500" height="500"></canvas>
+<button onclick="spin()">开始转动</button>
+<div id="result"></div>
+<script>
+const opts=["🏠 在家学","📚 图书馆学","🎉 放假","📖 复习"];
+const cols=["#FFD54F","#81C784","#64B5F6","#E57373"];
+const c=document.getElementById("wheel"),ctx=c.getContext("2d"),R=250;
+const a=2*Math.PI/opts.length;
+for(let i=0;i<opts.length;i++){
+ctx.beginPath();ctx.moveTo(R,R);ctx.arc(R,R,R,i*a,(i+1)*a);ctx.fillStyle=cols[i];ctx.fill();
+ctx.save();ctx.translate(R,R);ctx.rotate(i*a+a/2);
+ctx.font="bold 24px sans-serif";ctx.textAlign="right";
+ctx.fillStyle="#222";ctx.fillText(opts[i],200,8);
+ctx.restore();
+}
+let total=0,busy=false;
+function spin(){
+if(busy)return;
+busy=true;
+const i=Math.floor(Math.random()*opts.length);
+const deg=360/opts.length;
+total+=360*6+(360-(i*deg+deg/2));
+c.style.transform="rotate("+total+"deg)";
+navigator.vibrate&&navigator.vibrate([80,50,80]);
+setTimeout(()=>{
+document.getElementById("result").innerHTML="🎉 今天就决定：<br>"+opts[i];
+busy=false;
+},5100);
+}
+</script>
+</body>
+</html>
