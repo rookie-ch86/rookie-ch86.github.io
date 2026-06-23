@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+from zipfile import ZipFile
+from pathlib import Path
+
+html = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -90,4 +93,12 @@ busy=false;
 }
 </script>
 </body>
-</html>
+</html>"""
+
+out=Path("/mnt/data")
+htmlfile=out/"手机端-明天去哪里学习-幸运转盘.html"
+htmlfile.write_text(html,encoding="utf-8")
+zipf=out/"手机端-幸运转盘.zip"
+with ZipFile(zipf,"w") as z:
+    z.write(htmlfile,arcname=htmlfile.name)
+print(zipf)
