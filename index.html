@@ -303,6 +303,10 @@ btn.onclick = () => {
         options.length
     );
 
+    // 随机旋转圈数（4-8圈）
+    const randomSpins = 
+        Math.floor(Math.random() * 5) + 4;
+
     // 计算转盘需要转到的角度
     // 让第 index 项的中心指向指针(270°)
     const targetAngle = 
@@ -312,9 +316,9 @@ btn.onclick = () => {
             sectorAngle / 2
         );
 
-    // 累计旋转角度：转过多圈后停在目标位置
+    // 累计旋转角度：转过随机圈数后停在目标位置
     currentRotation +=
-        360 * 6 +
+        360 * randomSpins +
         (
             (
                 targetAngle -
